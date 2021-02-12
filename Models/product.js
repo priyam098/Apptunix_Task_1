@@ -14,7 +14,7 @@ const product = new Schema({
         ref : "category"
     },
     subCategoryId :{
-        type: this.schema.ObjectId,
+        type: Schema.ObjectId,
         ref: "subCategory"
     },
     name: {

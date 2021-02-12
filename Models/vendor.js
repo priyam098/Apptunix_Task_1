@@ -30,7 +30,7 @@ date: {
     required: false
 },
 address: {
-    type : Number,
+    type : String,
     required: true
 }
 });

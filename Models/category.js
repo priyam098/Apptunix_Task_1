@@ -1,5 +1,7 @@
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
 const category = new Schema({
     vendorId :{
         type: Schema.ObjectId,

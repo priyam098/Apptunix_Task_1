@@ -25,15 +25,14 @@ app.post('/signupUser',upload.single('fileName'),Services.userAPI.signupUser);
 app.post('/loginUser',Services.userAPI.loginUser);
 app.post('/updateUser',mWare.authenticateToken,Services.userAPI.updateUser);
 //vendor
-app.post('/register',upload.single('fileName'),Services.vendorAPI.signup);
+app.get('/profileVendor',mWare.authenticateToken,Services.vendorAPI.profileVendor);
+app.post('/registerVendor',Services.vendorAPI.registerVendor);
 app.post('/loginVendor',Services.vendorAPI.loginVendor);
-app.post('/updateVendor',mWare.authenticateToken,Services.vendorAPI.updateUser);
-
-
-
-
-
-
+app.post('/updateVendor',mWare.authenticateToken,Services.vendorAPI.updateVendor);
+app.post('/addCategory',mWare.authenticateToken,Services.vendorAPI.addCategory);
+app.post('/addSubCategory',mWare.authenticateToken,Services.vendorAPI.addSubCategory);
+app.post('/addProduct',mWare.authenticateToken,Services.vendorAPI.addProduct);
+app.post('/getProduct',mWare.authenticateToken,Services.vendorAPI.getProduct);
 
 
 

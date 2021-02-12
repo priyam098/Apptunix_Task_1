@@ -3,24 +3,26 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const valid = require('../validations/joiValidation')
 const userSchema = require('../Models/index')
+const mWare = require('../middlewares/auth');
+const port = 8081;
+
 
 const loginUser = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     console.log('req.body:'+req.body);
     try {
-        const result = await joiValidLogin.validateAsync(req.body);
+        const result = await valid.joiValidLogin.validateAsync(req.body);
         if (!email || !password) res.json('enter correct details');//
         const existUser = await userSchema.userModel.findOne({ email: email })
         console.log(existUser);
-        bcrypt.compare(password, existUser.password, function (err, isMatch) {
+        bcrypt.compare(password, existUser.password,function (err, isMatch) {
             if (!isMatch) {
                 return res.status(400).json({
                     status: false,
                     message: 'password mismatch'
                 })
             } else {
-
                 const accessToken = jwt.sign({_id:existUser._id}, config.ACCESS_TOKEN_SECRET);
                 return res.status(200).json({
                     accessToken : accessToken,
@@ -41,7 +43,7 @@ const profileUser = async (req,res)=>{
     try{
     const result = await userSchema.userModel.findById({_id:req.dataObj._id}).lean()
     console.log(result.image);
-    res.send({UserProfile:result,ProfilePic:`http://localhost:3000/${result.image}`})
+    res.send({UserProfile:result,ProfilePic:`http://localhost:${port}/${result.image}`})
     }
     catch (err) {
         res.send(console.log(err));
@@ -49,8 +51,8 @@ const profileUser = async (req,res)=>{
 };
 const signupUser = async (req, res) => {
     try {
-        const firstName = req.body.Fname;
-        const lastName = req.body.Lname;
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
         const age = req.body.age;
         const password = await bcrypt.hash(req.body.password, 10);
         const email = req.body.email;
@@ -59,8 +61,8 @@ const signupUser = async (req, res) => {
             req.body.image = req.file.filename;
            }
         const dataObj = {
-            Fname: Fname,
-            Lname: Lname,
+            firstName: firstName,
+            lastName: lastName,
             age: age,
             password: password,
             email: email,
@@ -68,7 +70,7 @@ const signupUser = async (req, res) => {
             image:req.body.image
         };
         console.log(dataObj);
-        await valid.joiValidSignUp.validateAsync(req.body);
+        const result = await valid.joiValidSignUp.validateAsync(req.body);
         console.log("validation sucessfull");
         const existUser = await userSchema.userModel.findOne({email:email})
         console.log('existing user:'+ existUser);
@@ -111,5 +113,5 @@ const placeOrder = async (req,res)=>{
 module.exports.signupUser = signupUser;
 module.exports.loginUser = loginUser;
 module.exports.profileUser = profileUser;
-module.exports.updateUserUser = updateUser;
+module.exports.updateUser = updateUser;
 module.exports.placeOrder = placeOrder;
