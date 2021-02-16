@@ -3,5 +3,6 @@ module.exports={
     vendorModel: require('./vendor'),
     categoryModel : require('./category'),
     subCategoryModel : require('./subCategory'),
-    productModel : require('./product')
+    productModel : require('./product'),
+    kartModel : require('./kart')
 }

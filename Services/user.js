@@ -51,22 +51,16 @@ const profileUser = async (req,res)=>{
 };
 const signupUser = async (req, res) => {
     try {
-        const firstName = req.body.firstName;
-        const lastName = req.body.lastName;
-        const age = req.body.age;
-        const password = await bcrypt.hash(req.body.password, 10);
-        const email = req.body.email;
-        const phone = req.body.phone;
         if(req.file){
             req.body.image = req.file.filename;
            }
         const dataObj = {
-            firstName: firstName,
-            lastName: lastName,
-            age: age,
-            password: password,
-            email: email,
-            phone: phone,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            age: req.body.age,
+            password: await bcrypt.hash(req.body.password, 10),
+            email: req.body.email,
+            phone: req.body.phone,
             image:req.body.image
         };
         console.log(dataObj);
@@ -106,12 +100,36 @@ const updateUser = async (req, res) => {
     catch (err) {
         console.log(err);
     }
-}
+};
 const placeOrder = async (req,res)=>{
-    
-}
-module.exports.signupUser = signupUser;
-module.exports.loginUser = loginUser;
-module.exports.profileUser = profileUser;
-module.exports.updateUser = updateUser;
-module.exports.placeOrder = placeOrder;
+    try{
+    console.log(req.dataObj);
+    const okId = await userSchema.userModel.findOne({_id:req.dataObj._id})
+    if(okId){
+    const obj = {
+        productId : req.body.productId,
+        vendorId : req.body.vendorId,
+        quantity : req.body.quantity,
+        address : req.body.address
+    }
+    let product = await userSchema.productModel.findOne({_id : obj.productId});
+    let price = product.price;
+    req.body.totalPrice = obj.quantity*price;
+    const orderStored = await userSchema.kartModel.create(req.body);
+    res.send({status:200,message:"order added to kart successfully",order:req.body});
+    }
+    else{
+        res.send('user does not exist');
+    }
+  }
+  catch(err){
+    res.send(err)
+  } 
+};
+module.exports = {
+    loginUser : loginUser,
+    profileUser : profileUser,
+    updateUser : updateUser,
+    signupUser : signupUser,
+    placeOrder : placeOrder
+};
