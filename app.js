@@ -5,6 +5,8 @@ const connection = require('./connection/connect');
 const multer = require('multer');
 const mWare = require('./middlewares/auth');
 const Services = require('./Services/index');
+const cors = require('cors');
+app.use(cors());
 
 let storage = multer.diskStorage({
     destination:(req,file,cb)=>{

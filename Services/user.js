@@ -5,7 +5,7 @@ const valid = require('../validations/joiValidation')
 const userSchema = require('../Models/index')
 const mWare = require('../middlewares/auth');
 const port = 8081;
-
+const sendService = require('../mail/message')
 
 const loginUser = async (req, res) => {
     const email = req.body.email;
@@ -73,6 +73,7 @@ const signupUser = async (req, res) => {
         console.log(dataAdded);
         const accessToken = jwt.sign({_id : dataAdded._id},config.ACCESS_TOKEN_SECRET)
         res.send({accessToken:accessToken,status:200,message:"SignUp sucessful"});
+        await sendService.sendEmail(dataObj)
         }
         else res.json({status:400,messagr:"EmailId already exist"});
     } catch (error) {

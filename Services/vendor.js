@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
-const config = require('../config/dev')
-const jwt = require('jsonwebtoken')
-const valid = require('../validations/joiValidation')
+const config = require('../config/dev');
+const jwt = require('jsonwebtoken');
+const valid = require('../validations/joiValidation');
 const Schema = require('../Models/index');
 const mongoose = require('mongoose');
-
+const sendService = require('../mail/message')
 const registerVendor = async (req, res) => {
     try {
         const dataObj = {
@@ -23,6 +23,7 @@ const registerVendor = async (req, res) => {
             const dataAdded = await Schema.vendorModel.create(dataObj);
             const accessToken = jwt.sign({ _id: dataAdded._id }, config.ACCESS_TOKEN_SECRET)
             res.send({ accessToken: accessToken, status: 200, message: "SignUp sucessful" });
+            await sendService.sendEmail(dataObj)
         }
         else res.json({ status: 400, messagr: "EmailId already exist" });
     } catch (error) {
@@ -172,7 +173,7 @@ const getProduct = async (req, res) => {
                 $lookup: {
                     from: "subcategories",
                     let: { categoryId: "$_id" },
-                    pipeline: [{ $match: { $expr: { $eq: ["$$categoryId", "$categoryId"] } } }, {
+                    pipeline: [{ $match: { $expr: { $eq: ["$$categoryId", "$categoryId"]}}},{
                         $lookup: {
                             from: "products",
                             let: { subCategoryId: "$_id" },
@@ -183,22 +184,30 @@ const getProduct = async (req, res) => {
                     as: "subCategory"
                 }
             }, { $unwind: "$subCategory" }])
-            let arr = [];
-            for(item of product)
-            {
-                if(item.subCategory.products.length!=0)
-                {
-                    arr.push(item);
-                }
-            }
+            // let arr = [];
+            // for(item of product)
+            // {
+            //     if(item.subCategory.products.length!=0)
+            //     {
+            //         arr.push(item);
+            //     }
+            // }
+        //     const arr1 = product.forEach((cv)=>{
+        //         if(cv.subCategory.products.length!=0)
+        //         {
+        //             arr1.push(cv)
+        //         }
+        // })
+        // console.log("$$$$$$$$$$$$$$$$$",arr1);
             // const result = product.forEach((cv)=>{
             //     let productLen = cv.subCategory.products.length
             //     if(productLen != 0){
             //         console.log(cv);
             //         return cv 
             //     }
+              
             // })
-            res.send(arr);
+            res.send(product);
         }
         else {
             res.send("not authorised");
@@ -207,7 +216,7 @@ const getProduct = async (req, res) => {
     catch (err) {
         res.send(err)
     }
-}
+};
 // const getProduct = async(req,res)=>{
 //     try{
 //     const okId = await Schema.vendorModel.findOne({_id:req.dataObj._id})
