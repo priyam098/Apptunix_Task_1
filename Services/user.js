@@ -51,6 +51,7 @@ const profileUser = async (req,res)=>{
 };
 const signupUser = async (req, res) => {
     try {
+        
         if(req.file){
             req.body.image = req.file.filename;
            }
@@ -66,7 +67,7 @@ const signupUser = async (req, res) => {
         console.log(dataObj);
         const result = await valid.joiValidSignUp.validateAsync(req.body);
         console.log("validation sucessfull");
-        const existUser = await userSchema.userModel.findOne({email:email})
+        const existUser = await userSchema.userModel.findOne({email:dataObj.email})
         console.log('existing user:'+ existUser);
         if(!existUser){
         const dataAdded = await userSchema.userModel.create(dataObj);
