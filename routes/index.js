@@ -1,4 +1,4 @@
 module.exports = {
-    userRouter : require('./user'),
-    vendorRouter : require('./vendor')
+    userRouterIndex : require('./user'),
+    vendorRouterIndex : require('./vendor')
 }

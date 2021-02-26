@@ -7,8 +7,8 @@ app.use(express.static('uploads'));
 app.use(express.json())
 
 const index = require('./routes/index');
-app.use('/user',index.userRouter.userRouter);
-app.use('/vendor',index.vendorRouter.vendorRouter);
+app.use('/user',index.userRouterIndex.userRouter);
+app.use('/vendor',index.vendorRouterIndex.vendorRouter);
 
 connection.connect();
 app.listen(config.port,()=>console.log(`server up and running on ${config.port}`))

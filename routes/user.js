@@ -9,4 +9,4 @@ userRouter.post('/loginUser',Services.userAPI.loginUser);
 userRouter.post('/updateUser',mWare.authenticateToken,Services.userAPI.updateUser);
 userRouter.post('/placeOrder',mWare.authenticateToken,Services.userAPI.placeOrder);
 
-exports.userRouter = userRouter
+exports.userRouter = userRouter;
