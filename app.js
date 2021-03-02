@@ -31,6 +31,7 @@ client.hgetall("key",(err,stu)=>{
     if(err) console.log(err);
     else console.log(stu);
 })
+
 app.use(express.static('uploads'));
 app.use(express.json());
 
