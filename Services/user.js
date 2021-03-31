@@ -16,7 +16,7 @@ const loginUser = async (req, res) => {
         if (!email || !password) res.json('enter correct details');//
         const existUser = await userSchema.userModel.findOne({ email: email })
         console.log(existUser);
-        bcrypt.compare(password, existUser.password,function (err, isMatch) {
+        await bcrypt.compare(password, existUser.password,function (err, isMatch) {
             if (!isMatch) {
                 return res.status(400).json({
                     status: false,
@@ -51,7 +51,6 @@ const profileUser = async (req,res)=>{
 };
 const signupUser = async (req, res) => {
     try {
-        
         if(req.file){
             req.body.image = req.file.filename;
            }

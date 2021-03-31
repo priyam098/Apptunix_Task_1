@@ -221,7 +221,7 @@ const getProduct = async (req, res) => {
 //     try{
 //     const okId = await Schema.vendorModel.findOne({_id:req.dataObj._id})
 //     if(okId){
-//     const store = await Schema.productModel.find({}).populate('categoryId', 'name vendorId').populate('subCategoryId', 'name').lean();
+//     const store = await Schema.productModel.find({   }).populate('categoryId', 'name vendorId').populate('subCategoryId', 'name').lean();
 //     console.log('$$$$$$$$$$$', store);
 //     res.send(store)
 //     }
